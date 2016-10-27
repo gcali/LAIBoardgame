@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions 
+    name="BoardBooking" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:schema="http://www.lai.ddns.net/schema/BoardBooking/" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://www.lai.ddns.net/BoardBooking/" 
+    targetNamespace="http://www.lai.ddns.net/BoardBooking/">
+  
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://www.lai.ddns.net/BoardBooking/">
+            <xsd:import schemaLocation="BoardBookingSchema.xsd"
+                        namespace="http://www.lai.ddns.net/schema/BoardBooking/"/>
+
+            <!-- Request and  response for BookBoardgame -->
+            <xsd:element name="bookingData" type="schema:bookingDataType"/>
+            <xsd:element name="bookingStatus" type="schema:boardgameBookingAnswerType"/>
+
+            <!-- Request and  response for AbortGameBooking -->
+            <xsd:element name="bookingAbort" type="schema:bookingID"/>
+            <xsd:element name="bookingAbortResult" type="schema:successOrFailure"/>
+
+            <!-- TODO -->
+            <!-- Request and  response for BoardgameBooking -->
+            <xsd:element name="openSession" type="schema:openSessionType"/>
+            <xsd:element name="openSessionResult" type="schema:successOrFailure"/>
+
+            <!-- Request and  response for BoardgameBooking -->
+            <xsd:element name="payment" type="schema:emptyType"/>
+            <xsd:element name="paymentResult" type="schema:requestPaymentDataAnswerType"/>
+
+            <!-- Request and  response for BoardgameBooking -->
+            <xsd:element name="listGames" type="schema:emptyType"/>
+            <xsd:element name="listGamesResult" type="schema:gameListType"/>
+            
+            <!-- Request and  response for BoardgameBooking -->
+            <xsd:element name="requestDetails" type="schema:bookingID"/>
+            <xsd:element name="requestDetailsResult" type="schema:bookingDetailsListType"/>
+            
+            <!-- Request and  response for BoardgameBooking -->
+            <xsd:element name="requestBookingGroups" type="schema:emptyType"/>
+            <xsd:element name="requestBookingGroupsResult" type="schema:bookingGroupListType"/>
+        </xsd:schema>
+    </wsdl:types>
+      
+    <wsdl:message name="BoardgameBookingRequest">
+        <wsdl:part name="bookingData" element="tns:bookingData"/>
+    </wsdl:message>
+    <wsdl:message name="BoardgameBookingResponse">
+        <wsdl:part name="status" element="tns:bookingStatus"/>
+    </wsdl:message>
+    <wsdl:message name="BoardgameBookingAbortRequest">
+    	<wsdl:part name="bookingAbort" element="tns:bookingAbort"/>
+    </wsdl:message>
+    <wsdl:message name="BoardgameBookingAbortResponse">
+    	<wsdl:part name="bookingAbortResult" element="tns:bookingAbortResult"/>
+    </wsdl:message>
+    <wsdl:message name="OpenSessionRequest">
+        <wsdl:part name="openSession" element="tns:openSession"/>
+    </wsdl:message>
+    <wsdl:message name="OpenSessionResponse">
+        <wsdl:part name="openSessionResult" element="tns:openSessionResult"/>
+    </wsdl:message>
+    <wsdl:message name="RequestPaymentDataRequest">
+        <wsdl:part name="payment" element="tns:payment"/>
+    </wsdl:message>
+    <wsdl:message name="RequestPaymentDataResponse">
+        <wsdl:part name="paymentResult" element="tns:paymentResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="ListGamesRequest">
+        <wsdl:part name="listGames" element="tns:listGames"/>
+    </wsdl:message>
+    <wsdl:message name="ListGamesResponse">
+        <wsdl:part name="listGamesResult" element="tns:listGamesResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="BookingDetailsRequest">
+        <wsdl:part name="requestDetails" element="tns:requestDetails"/>
+    </wsdl:message>
+    <wsdl:message name="BookingDetailsResponse">
+        <wsdl:part name="requestDetailsResult" element="tns:requestDetailsResult"/>
+    </wsdl:message>
+
+    <wsdl:message name="BookingGroupsRequest">
+        <wsdl:part name="requestBookingGroups" element="tns:requestBookingGroups"/>
+    </wsdl:message>
+    <wsdl:message name="BookingGroupsResponse">
+        <wsdl:part name="requestBookingGroupsResult" element="tns:requestBookingGroupsResult"/>
+    </wsdl:message>
+
+    <wsdl:portType name="BoardBooking">
+      <jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws">      
+        <jxb:globalBindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" 
+					xmlns:xs="http://www.w3.org/2001/XMLSchema">        
+	      <jxb:javaType name="java.time.LocalDate" xmlType="xs:date" 
+				  parseMethod="org.apache.cxf.tools.common.DataTypeAdapter.parseDateTime"
+				  printMethod="org.apache.cxf.tools.common.DataTypeAdapter.printDateTime"/>                   
+        </jxb:globalBindings>  
+      </jaxws:bindings>
+      <wsdl:operation name="BookBoardgame">
+        <wsdl:input message="tns:BoardgameBookingRequest"/>
+        <wsdl:output message="tns:BoardgameBookingResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="AbortBoardgameBooking">
+      	<wsdl:input message="tns:BoardgameBookingAbortRequest"/>
+      	<wsdl:output message="tns:BoardgameBookingAbortResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="OpenSession">
+        <wsdl:input message="tns:OpenSessionRequest"/>
+        <wsdl:output message="tns:OpenSessionResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="RequestPaymentData">
+        <wsdl:input message="tns:RequestPaymentDataRequest"/>
+        <wsdl:output message="tns:RequestPaymentDataResponse"/>
+      </wsdl:operation> 
+      <wsdl:operation name="ListGames">
+        <wsdl:input message="tns:ListGamesRequest"/>
+        <wsdl:output message="tns:ListGamesResponse"/>
+      </wsdl:operation> 
+      <wsdl:operation name="BookingDetails">
+        <wsdl:input message="tns:BookingDetailsRequest"/>
+        <wsdl:output message="tns:BookingDetailsResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="BookingGroups">
+        <wsdl:input message="tns:BookingGroupsRequest"/>
+        <wsdl:output message="tns:BookingGroupsResponse"/>
+      </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="BoardBooking" type="tns:BoardBooking">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="OpenSession">
+        <soap:operation soapAction="OpenSession"/>
+        <wsdl:input>
+          <soap:body use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BookBoardgame">
+        <soap:operation soapAction="BookBoardgame"/>
+        <wsdl:input>
+          <soap:body use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="AbortBoardgameBooking">
+      	<soap:operation soapAction="AbortBoardgameBooking"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="RequestPaymentData">
+      	<soap:operation soapAction="RequestPaymentData"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="ListGames">
+      	<soap:operation soapAction="ListGames"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BookingDetails">
+      	<soap:operation soapAction="BookingDetails"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="BookingGroups">
+      	<soap:operation soapAction="BookingGroups"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+    </wsdl:binding>
+
+
+    <wsdl:service name="BoardBooking">
+      <wsdl:port binding="tns:BoardBooking" name="BoardBooking">
+        <soap:address location="http://localhost:8080/BoardBooking/services/BoardBooking"/>
+      </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<jaxws:endpoint xmlns:tns="http://www.lai.ddns.net/BoardBooking/"
+		id="boardbooking" implementor="net.ddns.lai.boardbooking.BoardBookingImpl"
+		wsdlLocation="WEB-INF/wsdl/BoardBooking.wsdl" endpointName="tns:BoardBooking"
+		serviceName="tns:BoardBooking" address="/BoardBooking">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+		  <jaxws:inInterceptors>
+		<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+		  <constructor-arg>
+			<map>
+			  <entry key="action" value="Encrypt" />
+			  <entry key="decryptionPropFile" value="/home/giovanni/keys/booking.jks.properties" />
+			  <entry key="passwordCallbackClass" value="misc.PasswordCallback" />
+			</map>
+		  </constructor-arg>
+		</bean>
+	  </jaxws:inInterceptors> 
+	</jaxws:endpoint>
+</beans>

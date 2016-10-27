@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+    <Resource name="jdbc/testdb" 
+              auth="Container"
+              type="javax.sql.DataSource" 
+              username="gio" 
+              password="temp"              
+              driverClassName="org.apache.derby.jdbc.ClientDriver"
+              url="jdbc:derby://localhost:1527/laidb"
+              maxActive="10" 
+              maxIdle="4"/> 
+	<ResourceLink name="jdbc/laidb"
+				  global="jdbc/laidb"
+				  type="javax.sql.DataSource" />
+              
+</Context>

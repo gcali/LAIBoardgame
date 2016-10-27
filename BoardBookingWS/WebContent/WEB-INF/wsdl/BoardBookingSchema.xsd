@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.lai.ddns.net/schema/BoardBooking/" 
+    xmlns:tns="http://www.lai.ddns.net/schema/BoardBooking/" 
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    elementFormDefault="qualified"
+    jaxb:version="2.0">
+    
+    <xs:simpleType name="year">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="2016"/>
+            <xs:maxInclusive value="9999"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Set of strings that form valid UUIDs -->
+	<xs:simpleType name="uuidType">
+        <xs:restriction base="xs:string">
+            <xs:length value="36"/>
+            <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+    <xs:simpleType name="month">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="day">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="31"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A boardgame is described by its name and its price -->
+    <xs:complexType name="boardgameInfoType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="name" type="tns:boardgameType"/>
+            <xs:element name="price" type="tns:priceType"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:simpleType name="boardgameType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    
+    <!-- Both a single booking and a booking group are identified by a UUID -->
+    <xs:simpleType name="bookingID">
+        <xs:restriction base="tns:uuidType"/>
+    </xs:simpleType>
+    
+    <!-- When booking a game, in case of success the id of the booking
+         is returned -->
+    <xs:complexType name="boardgameBookingAnswerType">
+        <xs:choice>
+            <xs:element name="failure">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="success" type="tns:bookingID"/>
+        </xs:choice>
+    </xs:complexType> 
+    
+    <xs:simpleType name="successOrFailure">
+    	<xs:restriction base="xs:string">
+    		<xs:enumeration value="success"/>
+    		<xs:enumeration value="failure"/>
+    	</xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Restricts a price (in cents) to be positive -->
+    <xs:simpleType name="priceType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A booking request is described by the name of the games,
+         a base and an end dates -->
+    <xs:complexType name="bookingDataType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="baseDate" type="xs:date"/>
+            <xs:element name="endDate" type="xs:date"/>
+            <xs:element name="game" type="tns:boardgameType"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <!-- Opening a session requires providing a nickname; no password
+         authentication scheme is implemented -->
+    <xs:complexType name="openSessionType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="user" type="xs:string"/>
+        </xs:all>
+    </xs:complexType> 
+    
+    <!-- Used in those operations where no data must be provided from
+         the client -->
+    <xs:complexType name="emptyType">
+    <xs:sequence/>
+    </xs:complexType>
+    
+    <!-- When the client requests the payment data, either the request
+         isn't valid, or he must receive the total cost of the order
+         and its id -->
+    <xs:complexType name="requestPaymentDataAnswerType">
+        <xs:choice>
+            <xs:element name="failure">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="success">
+                <xs:complexType>
+                    <xs:all minOccurs="1" maxOccurs="1">
+						<xs:element name="price" type="tns:priceType"/>
+						<xs:element name="bookingID" type="tns:bookingID"/>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    
+    <!-- When a client requests all her groups, it must receive
+         for each of them both the id and the status -->
+    <xs:complexType name="bookingGroupType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="bookingID" type="tns:bookingID"/>
+            <xs:element name="paid" type="xs:boolean"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <!-- Utility type to describe a list of groups -->
+    <xs:complexType name="bookingGroupListType">
+        <xs:sequence>
+            <xs:element name="item" type="tns:bookingGroupType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Utility type to describe a list of bookings -->
+    <xs:complexType name="bookingDetailsListType">
+        <xs:sequence>
+            <xs:element name="item" type="tns:bookingDetailsType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- When a client requests information on the bookings of a group,
+         he must receive for each booking the id, the name of the game and
+         the dates -->
+    <xs:complexType name="bookingDetailsType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="bookingID" type="tns:bookingID"/>
+            <xs:element name="game" type="tns:boardgameType"/>
+            <xs:element name="baseDate" type="xs:date"/>
+            <xs:element name="endDate" type="xs:date"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <!-- Utility type to describe a list of games -->
+    <xs:complexType name="gameListType">
+        <xs:sequence>
+            <xs:element name="game" type="tns:boardgameInfoType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Adapter to marshall/unmarshall a LocalDate in/from a Date -->
+    <xs:annotation><xs:appinfo>
+        <jaxb:globalBindings>
+            <jaxb:javaType 
+                name="java.time.LocalDate" 
+                parseMethod="parser.DateAdapter.parseDate" 
+                printMethod="parser.DateAdapter.printDate" 
+                xmlType="xs:date"/>
+        </jaxb:globalBindings>
+    </xs:appinfo></xs:annotation>
+
+    
+</xs:schema>

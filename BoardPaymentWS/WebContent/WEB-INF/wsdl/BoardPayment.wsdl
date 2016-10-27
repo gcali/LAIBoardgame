@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions 
+    name="BoardPayment" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:schema="http://www.lai.ddns.net/schema/BoardPayment/" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://www.lai.ddns.net/BoardPayment/" 
+    targetNamespace="http://www.lai.ddns.net/BoardPayment/">
+  
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://www.lai.ddns.net/BoardPayment/">
+            <xsd:import schemaLocation="BoardPaymentSchema.xsd"
+                        namespace="http://www.lai.ddns.net/schema/BoardPayment/"/>
+
+            <xsd:element name="payment" type="schema:requestPaymentType"/>
+            <xsd:element name="paymentResult" type="schema:successOrFailure"/>
+            <!-- Request and response elements for RequestPayment -->
+        </xsd:schema>
+    </wsdl:types>
+      
+    <wsdl:message name="RequestPaymentRequest">
+        <wsdl:part name="payment" element="tns:payment"/>
+    </wsdl:message>
+    <wsdl:message name="RequestPaymentResponse">
+        <wsdl:part name="paymentResult" element="tns:paymentResult"/>
+    </wsdl:message>
+
+    <wsdl:portType name="BoardPayment">
+      <jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws">      
+        <jaxws:bindings node="wsd:definitions">
+			<provider>true</provider>
+		</jaxws:bindings>
+      </jaxws:bindings>
+      <wsdl:operation name="RequestPayment">
+        <wsdl:input message="tns:RequestPaymentRequest"/>
+        <wsdl:output message="tns:RequestPaymentResponse"/>
+      </wsdl:operation> 
+    </wsdl:portType>
+
+    <wsdl:binding name="BoardPayment" type="tns:BoardPayment">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="RequestPayment">
+      	<soap:operation soapAction="RequestPayment"/>
+      	<wsdl:input>
+      		<soap:body use="literal"/>
+      	</wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+      </wsdl:operation>
+    </wsdl:binding>
+
+
+    <wsdl:service name="BoardPayment">
+      <wsdl:port binding="tns:BoardPayment" name="BoardPayment">
+        <soap:address location="http://localhost:8080/BoardPayment/services/BoardPayment"/>
+      </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

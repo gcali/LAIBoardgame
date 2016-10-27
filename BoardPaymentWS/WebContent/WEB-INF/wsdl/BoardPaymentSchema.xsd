@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.lai.ddns.net/schema/BoardPayment/" 
+    xmlns:tns="http://www.lai.ddns.net/schema/BoardPayment/" 
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    elementFormDefault="qualified"
+    jaxb:version="2.0">
+    
+    <!-- Set of strings that form valid UUIDs -->
+	<xs:simpleType name="uuidType">
+        <xs:restriction base="xs:string">
+            <xs:length value="36"/>
+            <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- The ID of a booking groups is a UUID -->
+    <xs:simpleType name="bookingID">
+        <xs:restriction base="tns:uuidType"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="successOrFailure">
+    	<xs:restriction base="xs:string">
+    		<xs:enumeration value="success"/>
+    		<xs:enumeration value="failure"/>
+    	</xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Restricts a price (in cents) to be positive -->
+    <xs:simpleType name="priceType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A payment request is formed by the ID of the group and its cost -->
+    <xs:complexType name="requestPaymentType">
+        <xs:all minOccurs="1" maxOccurs="1">
+            <xs:element name="id" type="tns:bookingID"/>
+            <xs:element name="price" type="tns:priceType"/>
+        </xs:all>
+    </xs:complexType>
+    
+</xs:schema>
